@@ -1,24 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, FlatList } from 'react-native';
 
 const Laskin = () => {
   const [num1, setNum1] = useState('');
   const [num2, setNum2] = useState('');
   const [result, setResult] = useState('');
+  const [history, setHistory] = useState([]);
 
   const addNumbers = () => {
     const sum = parseFloat(num1) + parseFloat(num2);
+    const operation = `${num1} + ${num2} = ${sum}`;
     setResult(`Result: ${sum}`);
+    setHistory([...history, operation]);
   };
 
   const subtractNumbers = () => {
     const difference = parseFloat(num1) - parseFloat(num2);
+    const operation = `${num1} - ${num2} = ${difference}`;
     setResult(`Result: ${difference}`);
+    setHistory([...history, operation]);
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <Text style={styles.result}>{result}</Text>
       <TextInput
         style={styles.input}
@@ -38,7 +44,14 @@ const Laskin = () => {
         <Button title="+" onPress={addNumbers} />
         <Button title="-" onPress={subtractNumbers} />
       </View>
-      
+
+      <Text style={styles.historyTitle}>Historia</Text>
+
+      <FlatList
+        data={history}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => <Text>{item}</Text>}
+      />
     </View>
   );
 };
@@ -48,6 +61,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 200,
   },
   input: {
     width: 200,
@@ -65,6 +79,11 @@ const styles = StyleSheet.create({
   result: {
     marginBottom: 5,
     fontSize: 18,
+  },
+  historyTitle: {
+    marginTop: 10,
+    fontSize: 20,
+  
   },
 });
 
